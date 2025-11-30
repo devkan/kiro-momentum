@@ -1,0 +1,504 @@
+{
+  "events": [
+    {
+      "timestamp": 1764477834765,
+      "message": "[INFO] 2025-11-30 13:43:54 Timeout waiting for upstream",
+      "ingestionTime": 1764477835265
+    },
+    {
+      "timestamp": 1764477894765,
+      "message": "[INFO] 2025-11-30 13:44:54 Database query executed",
+      "ingestionTime": 1764477895265
+    },
+    {
+      "timestamp": 1764477954765,
+      "message": "[INFO] 2025-11-30 13:45:54 Database query executed",
+      "ingestionTime": 1764477955265
+    },
+    {
+      "timestamp": 1764478014765,
+      "message": "[ERROR] 2025-11-30 13:46:54 Database query executed\n at com.example.Service.process(Service.java:102)",
+      "ingestionTime": 1764478015265
+    },
+    {
+      "timestamp": 1764478074765,
+      "message": "[INFO] 2025-11-30 13:47:54 Request processed successfully",
+      "ingestionTime": 1764478075265
+    },
+    {
+      "timestamp": 1764478134765,
+      "message": "[WARN] 2025-11-30 13:48:54 Cache miss occurred",
+      "ingestionTime": 1764478135265
+    },
+    {
+      "timestamp": 1764478194765,
+      "message": "[INFO] 2025-11-30 13:49:54 Cache miss occurred",
+      "ingestionTime": 1764478195265
+    },
+    {
+      "timestamp": 1764478254765,
+      "message": "[INFO] 2025-11-30 13:50:54 Timeout waiting for upstream",
+      "ingestionTime": 1764478255265
+    },
+    {
+      "timestamp": 1764478314765,
+      "message": "[INFO] 2025-11-30 13:51:54 Timeout waiting for upstream",
+      "ingestionTime": 1764478315265
+    },
+    {
+      "timestamp": 1764478374765,
+      "message": "[INFO] 2025-11-30 13:52:54 NullPointerException in handler",
+      "ingestionTime": 1764478375265
+    },
+    {
+      "timestamp": 1764478434765,
+      "message": "[WARN] 2025-11-30 13:53:54 Connection latency observed",
+      "ingestionTime": 1764478435265
+    },
+    {
+      "timestamp": 1764478494765,
+      "message": "[ERROR] 2025-11-30 13:54:54 Request processed successfully\n at com.example.Service.process(Service.java:102)",
+      "ingestionTime": 1764478495265
+    },
+    {
+      "timestamp": 1764478554765,
+      "message": "[WARN] 2025-11-30 13:55:54 Connection latency observed",
+      "ingestionTime": 1764478555265
+    },
+    {
+      "timestamp": 1764478614765,
+      "message": "[INFO] 2025-11-30 13:56:54 Timeout waiting for upstream",
+      "ingestionTime": 1764478615265
+    },
+    {
+      "timestamp": 1764478674765,
+      "message": "[INFO] 2025-11-30 13:57:54 Database query executed",
+      "ingestionTime": 1764478675265
+    },
+    {
+      "timestamp": 1764478734765,
+      "message": "[WARN] 2025-11-30 13:58:54 Connection latency observed",
+      "ingestionTime": 1764478735265
+    },
+    {
+      "timestamp": 1764478794765,
+      "message": "[WARN] 2025-11-30 13:59:54 Database query executed",
+      "ingestionTime": 1764478795265
+    },
+    {
+      "timestamp": 1764478854765,
+      "message": "[INFO] 2025-11-30 14:00:54 Timeout waiting for upstream",
+      "ingestionTime": 1764478855265
+    },
+    {
+      "timestamp": 1764478914765,
+      "message": "[ERROR] 2025-11-30 14:01:54 Cache miss occurred\n at com.example.Service.process(Service.java:102)",
+      "ingestionTime": 1764478915265
+    },
+    {
+      "timestamp": 1764478974765,
+      "message": "[INFO] 2025-11-30 14:02:54 Cache miss occurred",
+      "ingestionTime": 1764478975265
+    },
+    {
+      "timestamp": 1764479034765,
+      "message": "[ERROR] 2025-11-30 14:03:54 Cache miss occurred\n at com.example.Service.process(Service.java:102)",
+      "ingestionTime": 1764479035265
+    },
+    {
+      "timestamp": 1764479094765,
+      "message": "[ERROR] 2025-11-30 14:04:54 Cache miss occurred\n at com.example.Service.process(Service.java:102)",
+      "ingestionTime": 1764479095265
+    },
+    {
+      "timestamp": 1764479154765,
+      "message": "[INFO] 2025-11-30 14:05:54 Database query executed",
+      "ingestionTime": 1764479155265
+    },
+    {
+      "timestamp": 1764479214765,
+      "message": "[WARN] 2025-11-30 14:06:54 Timeout waiting for upstream",
+      "ingestionTime": 1764479215265
+    },
+    {
+      "timestamp": 1764479274765,
+      "message": "[WARN] 2025-11-30 14:07:54 Request processed successfully",
+      "ingestionTime": 1764479275265
+    },
+    {
+      "timestamp": 1764479334765,
+      "message": "[INFO] 2025-11-30 14:08:54 Cache miss occurred",
+      "ingestionTime": 1764479335265
+    },
+    {
+      "timestamp": 1764479394765,
+      "message": "[INFO] 2025-11-30 14:09:54 Cache miss occurred",
+      "ingestionTime": 1764479395265
+    },
+    {
+      "timestamp": 1764479454765,
+      "message": "[INFO] 2025-11-30 14:10:54 Request processed successfully",
+      "ingestionTime": 1764479455265
+    },
+    {
+      "timestamp": 1764479514765,
+      "message": "[ERROR] 2025-11-30 14:11:54 Connection latency observed\n at com.example.Service.process(Service.java:102)",
+      "ingestionTime": 1764479515265
+    },
+    {
+      "timestamp": 1764479574765,
+      "message": "[INFO] 2025-11-30 14:12:54 Cache miss occurred",
+      "ingestionTime": 1764479575265
+    },
+    {
+      "timestamp": 1764479634765,
+      "message": "[INFO] 2025-11-30 14:13:54 Cache miss occurred",
+      "ingestionTime": 1764479635265
+    },
+    {
+      "timestamp": 1764479694765,
+      "message": "[INFO] 2025-11-30 14:14:54 NullPointerException in handler",
+      "ingestionTime": 1764479695265
+    },
+    {
+      "timestamp": 1764479754765,
+      "message": "[INFO] 2025-11-30 14:15:54 Connection latency observed",
+      "ingestionTime": 1764479755265
+    },
+    {
+      "timestamp": 1764479814765,
+      "message": "[WARN] 2025-11-30 14:16:54 Timeout waiting for upstream",
+      "ingestionTime": 1764479815265
+    },
+    {
+      "timestamp": 1764479874765,
+      "message": "[INFO] 2025-11-30 14:17:54 Request processed successfully",
+      "ingestionTime": 1764479875265
+    },
+    {
+      "timestamp": 1764479934765,
+      "message": "[INFO] 2025-11-30 14:18:54 Cache miss occurred",
+      "ingestionTime": 1764479935265
+    },
+    {
+      "timestamp": 1764479994765,
+      "message": "[WARN] 2025-11-30 14:19:54 Connection latency observed",
+      "ingestionTime": 1764479995265
+    },
+    {
+      "timestamp": 1764480054765,
+      "message": "[WARN] 2025-11-30 14:20:54 Timeout waiting for upstream",
+      "ingestionTime": 1764480055265
+    },
+    {
+      "timestamp": 1764480114765,
+      "message": "[WARN] 2025-11-30 14:21:54 Connection latency observed",
+      "ingestionTime": 1764480115265
+    },
+    {
+      "timestamp": 1764480174765,
+      "message": "[INFO] 2025-11-30 14:22:54 Timeout waiting for upstream",
+      "ingestionTime": 1764480175265
+    },
+    {
+      "timestamp": 1764480234765,
+      "message": "[INFO] 2025-11-30 14:23:54 Cache miss occurred",
+      "ingestionTime": 1764480235265
+    },
+    {
+      "timestamp": 1764480294765,
+      "message": "[INFO] 2025-11-30 14:24:54 Timeout waiting for upstream",
+      "ingestionTime": 1764480295265
+    },
+    {
+      "timestamp": 1764480354765,
+      "message": "[INFO] 2025-11-30 14:25:54 Cache miss occurred",
+      "ingestionTime": 1764480355265
+    },
+    {
+      "timestamp": 1764480414765,
+      "message": "[INFO] 2025-11-30 14:26:54 Database query executed",
+      "ingestionTime": 1764480415265
+    },
+    {
+      "timestamp": 1764480474765,
+      "message": "[ERROR] 2025-11-30 14:27:54 Connection latency observed\n at com.example.Service.process(Service.java:102)",
+      "ingestionTime": 1764480475265
+    },
+    {
+      "timestamp": 1764480534765,
+      "message": "[ERROR] 2025-11-30 14:28:54 Cache miss occurred\n at com.example.Service.process(Service.java:102)",
+      "ingestionTime": 1764480535265
+    },
+    {
+      "timestamp": 1764480594765,
+      "message": "[WARN] 2025-11-30 14:29:54 Connection latency observed",
+      "ingestionTime": 1764480595265
+    },
+    {
+      "timestamp": 1764480654765,
+      "message": "[INFO] 2025-11-30 14:30:54 Database query executed",
+      "ingestionTime": 1764480655265
+    },
+    {
+      "timestamp": 1764480714765,
+      "message": "[INFO] 2025-11-30 14:31:54 Request processed successfully",
+      "ingestionTime": 1764480715265
+    },
+    {
+      "timestamp": 1764480774765,
+      "message": "[WARN] 2025-11-30 14:32:54 Timeout waiting for upstream",
+      "ingestionTime": 1764480775265
+    },
+    {
+      "timestamp": 1764480834765,
+      "message": "[ERROR] 2025-11-30 14:33:54 NullPointerException in handler\n at com.example.Service.process(Service.java:102)",
+      "ingestionTime": 1764480835265
+    },
+    {
+      "timestamp": 1764480894765,
+      "message": "[ERROR] 2025-11-30 14:34:54 Cache miss occurred\n at com.example.Service.process(Service.java:102)",
+      "ingestionTime": 1764480895265
+    },
+    {
+      "timestamp": 1764480954765,
+      "message": "[INFO] 2025-11-30 14:35:54 Request processed successfully",
+      "ingestionTime": 1764480955265
+    },
+    {
+      "timestamp": 1764481014765,
+      "message": "[INFO] 2025-11-30 14:36:54 Cache miss occurred",
+      "ingestionTime": 1764481015265
+    },
+    {
+      "timestamp": 1764481074765,
+      "message": "[INFO] 2025-11-30 14:37:54 Cache miss occurred",
+      "ingestionTime": 1764481075265
+    },
+    {
+      "timestamp": 1764481134765,
+      "message": "[INFO] 2025-11-30 14:38:54 NullPointerException in handler",
+      "ingestionTime": 1764481135265
+    },
+    {
+      "timestamp": 1764481194765,
+      "message": "[WARN] 2025-11-30 14:39:54 Timeout waiting for upstream",
+      "ingestionTime": 1764481195265
+    },
+    {
+      "timestamp": 1764481254765,
+      "message": "[ERROR] 2025-11-30 14:40:54 Cache miss occurred\n at com.example.Service.process(Service.java:102)",
+      "ingestionTime": 1764481255265
+    },
+    {
+      "timestamp": 1764481314765,
+      "message": "[INFO] 2025-11-30 14:41:54 NullPointerException in handler",
+      "ingestionTime": 1764481315265
+    },
+    {
+      "timestamp": 1764481374765,
+      "message": "[INFO] 2025-11-30 14:42:54 Database query executed",
+      "ingestionTime": 1764481375265
+    },
+    {
+      "timestamp": 1764481434765,
+      "message": "[ERROR] 2025-11-30 14:43:54 Cache miss occurred\n at com.example.Service.process(Service.java:102)",
+      "ingestionTime": 1764481435265
+    },
+    {
+      "timestamp": 1764481494765,
+      "message": "[INFO] 2025-11-30 14:44:54 Cache miss occurred",
+      "ingestionTime": 1764481495265
+    },
+    {
+      "timestamp": 1764481554765,
+      "message": "[INFO] 2025-11-30 14:45:54 Cache miss occurred",
+      "ingestionTime": 1764481555265
+    },
+    {
+      "timestamp": 1764481614765,
+      "message": "[WARN] 2025-11-30 14:46:54 Cache miss occurred",
+      "ingestionTime": 1764481615265
+    },
+    {
+      "timestamp": 1764481674765,
+      "message": "[WARN] 2025-11-30 14:47:54 Request processed successfully",
+      "ingestionTime": 1764481675265
+    },
+    {
+      "timestamp": 1764481734765,
+      "message": "[WARN] 2025-11-30 14:48:54 Request processed successfully",
+      "ingestionTime": 1764481735265
+    },
+    {
+      "timestamp": 1764481794765,
+      "message": "[INFO] 2025-11-30 14:49:54 Request processed successfully",
+      "ingestionTime": 1764481795265
+    },
+    {
+      "timestamp": 1764481854765,
+      "message": "[WARN] 2025-11-30 14:50:54 Timeout waiting for upstream",
+      "ingestionTime": 1764481855265
+    },
+    {
+      "timestamp": 1764481914765,
+      "message": "[INFO] 2025-11-30 14:51:54 Cache miss occurred",
+      "ingestionTime": 1764481915265
+    },
+    {
+      "timestamp": 1764481974765,
+      "message": "[INFO] 2025-11-30 14:52:54 Cache miss occurred",
+      "ingestionTime": 1764481975265
+    },
+    {
+      "timestamp": 1764482034765,
+      "message": "[INFO] 2025-11-30 14:53:54 Connection latency observed",
+      "ingestionTime": 1764482035265
+    },
+    {
+      "timestamp": 1764482094765,
+      "message": "[ERROR] 2025-11-30 14:54:54 NullPointerException in handler\n at com.example.Service.process(Service.java:102)",
+      "ingestionTime": 1764482095265
+    },
+    {
+      "timestamp": 1764482154765,
+      "message": "[WARN] 2025-11-30 14:55:54 Timeout waiting for upstream",
+      "ingestionTime": 1764482155265
+    },
+    {
+      "timestamp": 1764482214765,
+      "message": "[ERROR] 2025-11-30 14:56:54 Request processed successfully\n at com.example.Service.process(Service.java:102)",
+      "ingestionTime": 1764482215265
+    },
+    {
+      "timestamp": 1764482274765,
+      "message": "[ERROR] 2025-11-30 14:57:54 Connection latency observed\n at com.example.Service.process(Service.java:102)",
+      "ingestionTime": 1764482275265
+    },
+    {
+      "timestamp": 1764482334765,
+      "message": "[INFO] 2025-11-30 14:58:54 Timeout waiting for upstream",
+      "ingestionTime": 1764482335265
+    },
+    {
+      "timestamp": 1764482394765,
+      "message": "[WARN] 2025-11-30 14:59:54 Connection latency observed",
+      "ingestionTime": 1764482395265
+    },
+    {
+      "timestamp": 1764482454765,
+      "message": "[WARN] 2025-11-30 15:00:54 Connection latency observed",
+      "ingestionTime": 1764482455265
+    },
+    {
+      "timestamp": 1764482514765,
+      "message": "[WARN] 2025-11-30 15:01:54 Database query executed",
+      "ingestionTime": 1764482515265
+    },
+    {
+      "timestamp": 1764482574765,
+      "message": "[ERROR] 2025-11-30 15:02:54 Database query executed\n at com.example.Service.process(Service.java:102)",
+      "ingestionTime": 1764482575265
+    },
+    {
+      "timestamp": 1764482634765,
+      "message": "[INFO] 2025-11-30 15:03:54 Timeout waiting for upstream",
+      "ingestionTime": 1764482635265
+    },
+    {
+      "timestamp": 1764482694765,
+      "message": "[WARN] 2025-11-30 15:04:54 Timeout waiting for upstream",
+      "ingestionTime": 1764482695265
+    },
+    {
+      "timestamp": 1764482754765,
+      "message": "[ERROR] 2025-11-30 15:05:54 Timeout waiting for upstream\n at com.example.Service.process(Service.java:102)",
+      "ingestionTime": 1764482755265
+    },
+    {
+      "timestamp": 1764482814765,
+      "message": "[ERROR] 2025-11-30 15:06:54 Cache miss occurred\n at com.example.Service.process(Service.java:102)",
+      "ingestionTime": 1764482815265
+    },
+    {
+      "timestamp": 1764482874765,
+      "message": "[WARN] 2025-11-30 15:07:54 NullPointerException in handler",
+      "ingestionTime": 1764482875265
+    },
+    {
+      "timestamp": 1764482934765,
+      "message": "[INFO] 2025-11-30 15:08:54 Timeout waiting for upstream",
+      "ingestionTime": 1764482935265
+    },
+    {
+      "timestamp": 1764482994765,
+      "message": "[INFO] 2025-11-30 15:09:54 NullPointerException in handler",
+      "ingestionTime": 1764482995265
+    },
+    {
+      "timestamp": 1764483054765,
+      "message": "[ERROR] 2025-11-30 15:10:54 Timeout waiting for upstream\n at com.example.Service.process(Service.java:102)",
+      "ingestionTime": 1764483055265
+    },
+    {
+      "timestamp": 1764483114765,
+      "message": "[INFO] 2025-11-30 15:11:54 Cache miss occurred",
+      "ingestionTime": 1764483115265
+    },
+    {
+      "timestamp": 1764483174765,
+      "message": "[INFO] 2025-11-30 15:12:54 Database query executed",
+      "ingestionTime": 1764483175265
+    },
+    {
+      "timestamp": 1764483234765,
+      "message": "[WARN] 2025-11-30 15:13:54 Cache miss occurred",
+      "ingestionTime": 1764483235265
+    },
+    {
+      "timestamp": 1764483294765,
+      "message": "[INFO] 2025-11-30 15:14:54 Database query executed",
+      "ingestionTime": 1764483295265
+    },
+    {
+      "timestamp": 1764483354765,
+      "message": "[WARN] 2025-11-30 15:15:54 Request processed successfully",
+      "ingestionTime": 1764483355265
+    },
+    {
+      "timestamp": 1764483414765,
+      "message": "[INFO] 2025-11-30 15:16:54 Connection latency observed",
+      "ingestionTime": 1764483415265
+    },
+    {
+      "timestamp": 1764483474765,
+      "message": "[INFO] 2025-11-30 15:17:54 Request processed successfully",
+      "ingestionTime": 1764483475265
+    },
+    {
+      "timestamp": 1764483534765,
+      "message": "[INFO] 2025-11-30 15:18:54 Timeout waiting for upstream",
+      "ingestionTime": 1764483535265
+    },
+    {
+      "timestamp": 1764483594765,
+      "message": "[INFO] 2025-11-30 15:19:54 Timeout waiting for upstream",
+      "ingestionTime": 1764483595265
+    },
+    {
+      "timestamp": 1764483654765,
+      "message": "[ERROR] 2025-11-30 15:20:54 Request processed successfully\n at com.example.Service.process(Service.java:102)",
+      "ingestionTime": 1764483655265
+    },
+    {
+      "timestamp": 1764483714765,
+      "message": "[WARN] 2025-11-30 15:21:54 NullPointerException in handler",
+      "ingestionTime": 1764483715265
+    },
+    {
+      "timestamp": 1764483774765,
+      "message": "[INFO] 2025-11-30 15:22:54 Request processed successfully",
+      "ingestionTime": 1764483775265
+    }
+  ]
+}

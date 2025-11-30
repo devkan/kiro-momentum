@@ -1,0 +1,343 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Custom CSS variables for theme transitions */
+:root {
+  --font-primary: 'Roboto', sans-serif;
+  --bg-filter: brightness(1);
+  --text-color: #ffffff;
+  --overlay-opacity: 0;
+  --glitch-intensity: 0;
+  
+  /* Smooth transitions for theme changes */
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* Smooth transitions for all elements during mode changes */
+* {
+  transition: filter 0.5s ease, opacity 0.5s ease, color 0.5s ease, background-color 0.5s ease;
+}
+
+/* Ensure smooth font transitions */
+body, button, input, textarea {
+  transition: font-family 0.3s ease, color 0.5s ease;
+}
+
+/* Apply theme font family */
+body {
+  font-family: var(--font-primary);
+  color: var(--text-color);
+}
+
+/* Glitch effect utilities */
+.glitch,
+.glitch-text {
+  animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+}
+
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    transform: translate(2px, 2px);
+  }
+  80% {
+    transform: translate(2px, -2px);
+  }
+  100% {
+    transform: translate(0);
+  }
+}
+
+.scanline {
+  position: relative;
+  overflow: hidden;
+}
+
+.scanline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(0, 0, 0, 0.3) 50%
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+  animation: scanline 8s linear infinite;
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+/* Horror overlay effects */
+.horror-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Scanlines effect - GPU accelerated */
+.scanlines {
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  animation: scanlines-move 8s linear infinite;
+  will-change: transform;
+}
+
+@keyframes scanlines-move {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(10px);
+  }
+}
+
+/* Flicker effect for glitch mode */
+.flicker {
+  animation: flicker-effect 0.15s infinite;
+  will-change: opacity;
+}
+
+@keyframes flicker-effect {
+  0%, 100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.03;
+  }
+}
+
+/* Red vignette for nightmare mode */
+.red-vignette {
+  background: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    transparent 40%,
+    rgba(139, 0, 0, 0.3) 100%
+  );
+  will-change: opacity;
+}
+
+/* Pulsing red overlay for nightmare mode */
+.pulse-red {
+  animation: pulse-red-effect 2s ease-in-out infinite;
+  will-change: opacity;
+}
+
+@keyframes pulse-red-effect {
+  0%, 100% {
+    opacity: 0.05;
+  }
+  50% {
+    opacity: 0.15;
+  }
+}
+
+/* Custom slider styles for DevModeToggle */
+input[type="range"].slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+
+input[type="range"].slider::-webkit-slider-track {
+  width: 100%;
+  height: 8px;
+  background: linear-gradient(
+    to right,
+    #dc2626 0%,
+    #dc2626 40%,
+    #eab308 40%,
+    #eab308 80%,
+    #22c55e 80%,
+    #22c55e 100%
+  );
+  border-radius: 4px;
+}
+
+input[type="range"].slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border: 2px solid #333;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: -6px;
+}
+
+input[type="range"].slider::-moz-range-track {
+  width: 100%;
+  height: 8px;
+  background: linear-gradient(
+    to right,
+    #dc2626 0%,
+    #dc2626 40%,
+    #eab308 40%,
+    #eab308 80%,
+    #22c55e 80%,
+    #22c55e 100%
+  );
+  border-radius: 4px;
+}
+
+input[type="range"].slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: white;
+  border: 2px solid #333;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+input[type="range"].slider:focus {
+  outline: none;
+}
+
+input[type="range"].slider:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+}
+
+input[type="range"].slider:focus::-moz-range-thumb {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+}
+
+/* Ghost slider - hide default thumb */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 0;
+  height: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 0;
+  height: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+/* Custom scrollbar for log viewer */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Firefox scrollbar */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.2);
+}
+
+/* Smooth fade-in animation for dynamic content */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
+}
+
+/* Number counter animation */
+@keyframes number-change {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Smooth transitions for AWS monitoring cards */
+.aws-card-value {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.aws-card-value:hover {
+  transform: scale(1.02);
+}
