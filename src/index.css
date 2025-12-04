@@ -25,11 +25,17 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  overflow: hidden;
+}
+
+html {
+  overflow: hidden;
 }
 
 #root {
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* Custom CSS variables for theme transitions */
@@ -446,4 +452,28 @@ input[type="range"]::-moz-range-thumb {
     color: #dc2626;
     text-shadow: 0 0 10px rgba(239, 68, 68, 0.8);
   }
+}
+
+/* Custom scrollbar for Hacker News panel */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar-track-transparent::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thumb-white::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.scrollbar-thumb-white::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Firefox scrollbar for Hacker News */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }

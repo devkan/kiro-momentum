@@ -57,9 +57,45 @@ npm run lint
 
 ## Features
 
+### Core Productivity Features
+- **Personalized Greeting**: Time-based greetings with your name
+- **Digital Clock**: Real-time clock with optional Pomodoro timer
+- **Todo List**: Persistent task management with LocalStorage
+- **Weather Widget**: Current weather based on your location
+- **Beautiful Backgrounds**: Unsplash API integration with local fallbacks
+- **Pomodoro Timer**: Integrated productivity timer with work/break cycles
+
+### Data Source Options
+
+Choose between two data sources for the left panel:
+
+#### 1. Hacker News (Default)
+- Displays top stories from Hacker News
+- No configuration needed
+- Updates every 5 minutes
+- Switch between Top, New, and Best stories
+- Health score based on story activity
+
+#### 2. AWS Monitoring
+- Displays AWS infrastructure metrics
+- **Mock Data Mode** (default): No AWS credentials needed
+- **Real AWS Mode**: Connect to your AWS account
+- Monitors: EC2 instances, CloudWatch metrics, logs, and costs
+- Health score based on server status and metrics
+
+See [AWS_SETUP.md](./AWS_SETUP.md) for detailed AWS configuration instructions.
+
+### Horror Theme Modes
+
+The dashboard transforms based on a "health score" (0-100):
+
 - **Peaceful Mode** (Health 80-100%): Clean, calming interface
 - **Glitch Mode** (Health 40-79%): Visual distortions and glitch effects
 - **Nightmare Mode** (Health 0-39%): Full horror experience with scary visuals and sounds
+
+The health score is calculated from:
+- **AWS Mode**: Server status, error logs, and CPU metrics
+- **Hacker News Mode**: Story scores and comment activity
 
 ### Audio Features
 

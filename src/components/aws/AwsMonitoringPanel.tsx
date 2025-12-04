@@ -12,8 +12,9 @@ export const AwsMonitoringPanel = memo(function AwsMonitoringPanel() {
   const { setHealthStatus } = useTheme();
   const [costsPaused, setCostsPaused] = useState(false);
   const [hasInitialData, setHasInitialData] = useState(false);
+  const [isMounted, setIsMounted] = useState(true);
 
-  // Fetch all AWS data with custom hooks
+  // Only fetch AWS data when this component is mounted and visible
   const {
     costs,
     logs,
@@ -21,7 +22,15 @@ export const AwsMonitoringPanel = memo(function AwsMonitoringPanel() {
     servers,
     healthScore,
     isLoading,
-  } = useAwsMonitoring(!costsPaused);
+  } = useAwsMonitoring(isMounted && !costsPaused);
+
+  // Set mounted state
+  useEffect(() => {
+    setIsMounted(true);
+    return () => {
+      setIsMounted(false);
+    };
+  }, []);
 
   // Track when we have initial data
   useEffect(() => {
@@ -30,12 +39,12 @@ export const AwsMonitoringPanel = memo(function AwsMonitoringPanel() {
     }
   }, [costs.summary, logs.summary, metrics.summary, servers.summary, hasInitialData]);
 
-  // Update theme health status based on AWS metrics
+  // Update theme health status based on AWS metrics - only when mounted
   useEffect(() => {
-    if (healthScore !== undefined) {
+    if (isMounted && healthScore !== undefined) {
       setHealthStatus(healthScore);
     }
-  }, [healthScore, setHealthStatus]);
+  }, [healthScore, setHealthStatus, isMounted]);
 
   const handleRefreshAll = useCallback(() => {
     costs.refetch();

@@ -3,10 +3,21 @@
 // Determine if we're in production mode
 const isProduction = import.meta.env.PROD;
 
-// Check if real AWS credentials are configured
+// Helper to check localStorage credentials
+const getStoredAwsCredentials = () => {
+  try {
+    const accessKey = localStorage.getItem('devops_dashboard_aws_access_key');
+    const secretKey = localStorage.getItem('devops_dashboard_aws_secret_key');
+    return Boolean(accessKey && secretKey);
+  } catch {
+    return false;
+  }
+};
+
+// Check if real AWS credentials are configured (either env vars or localStorage)
 const hasAwsCredentials = Boolean(
-  import.meta.env.VITE_AWS_ACCESS_KEY_ID &&
-  import.meta.env.VITE_AWS_SECRET_ACCESS_KEY
+  (import.meta.env.VITE_AWS_ACCESS_KEY_ID && import.meta.env.VITE_AWS_SECRET_ACCESS_KEY) ||
+  getStoredAwsCredentials()
 );
 
 /**
@@ -34,6 +45,35 @@ export const AWS_REFRESH_INTERVALS = {
  * Use mock data if no AWS credentials are configured
  */
 export const USE_MOCK_DATA = !hasAwsCredentials;
+
+/**
+ * Get AWS credentials from environment variables or localStorage
+ */
+export const getAwsCredentials = () => {
+  // Try environment variables first
+  if (import.meta.env.VITE_AWS_ACCESS_KEY_ID && import.meta.env.VITE_AWS_SECRET_ACCESS_KEY) {
+    return {
+      accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
+      secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
+      region: import.meta.env.VITE_AWS_REGION || 'us-east-1',
+    };
+  }
+
+  // Try localStorage
+  try {
+    const accessKeyId = localStorage.getItem('devops_dashboard_aws_access_key');
+    const secretAccessKey = localStorage.getItem('devops_dashboard_aws_secret_key');
+    const region = localStorage.getItem('devops_dashboard_aws_region') || 'us-east-1';
+
+    if (accessKeyId && secretAccessKey) {
+      return { accessKeyId, secretAccessKey, region };
+    }
+  } catch {
+    // localStorage not available
+  }
+
+  return null;
+};
 
 /**
  * AWS Region configuration

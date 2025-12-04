@@ -12,6 +12,7 @@ import { HorrorOverlay } from './HorrorOverlay';
 import { DevModeToggle } from './DevModeToggle';
 import { AudioManager } from './AudioManager';
 import { AwsMonitoringPanel } from './aws/AwsMonitoringPanel';
+import { HackerNewsPanel } from './hackernews/HackerNewsPanel';
 import { StorageService } from '../services/StorageService';
 import { usePomodoro } from '../hooks/usePomodoro';
 
@@ -26,6 +27,7 @@ export function Dashboard() {
   const [isPomodoroModalOpen, setIsPomodoroModalOpen] = useState(false);
   const [backgroundRefreshKey, setBackgroundRefreshKey] = useState(0);
   const [weatherRefreshKey, setWeatherRefreshKey] = useState(0);
+  const [dataSource, setDataSource] = useState<'aws' | 'hackernews'>('hackernews');
   
   // Pomodoro timer hook
   const pomodoro = usePomodoro();
@@ -33,7 +35,9 @@ export function Dashboard() {
   // First-load detection: check if user name exists in storage
   useEffect(() => {
     const storedName = StorageService.getUserName();
+    const storedDataSource = StorageService.getDataSource();
     setUserName(storedName);
+    setDataSource(storedDataSource);
     setIsLoading(false);
   }, []);
 
@@ -45,6 +49,10 @@ export function Dashboard() {
     // Trigger background and weather refresh by updating the keys
     setBackgroundRefreshKey(prev => prev + 1);
     setWeatherRefreshKey(prev => prev + 1);
+    
+    // Update data source preference
+    const storedDataSource = StorageService.getDataSource();
+    setDataSource(storedDataSource);
   };
 
   // Show loading state briefly while checking storage
@@ -54,9 +62,10 @@ export function Dashboard() {
 
   // Apply theme-based CSS classes
   const dashboardClasses = `
-    min-h-screen 
+    h-screen 
     flex flex-col 
     relative 
+    overflow-hidden
     transition-all duration-500 ease-in-out
     ${theme.mode === 'nightmare' ? 'text-red-500' : ''}
     ${theme.mode === 'glitch' ? 'text-gray-300' : ''}
@@ -108,11 +117,15 @@ export function Dashboard() {
         {userName ? (
           <>
             {/* Three Column Layout */}
-            <main id="main-content" className="flex min-h-screen gap-8 px-8 py-8">
-              {/* Left Column - AWS Monitoring */}
+            <main id="main-content" className="flex h-full gap-8 px-8 py-8 overflow-hidden">
+              {/* Left Column - Data Source Panel */}
               <div className="flex-1 flex items-center justify-center">
                 <div className="w-full">
-                  <AwsMonitoringPanel />
+                  {dataSource === 'aws' ? (
+                    <AwsMonitoringPanel key="aws-panel" />
+                  ) : (
+                    <HackerNewsPanel key="hn-panel" />
+                  )}
                 </div>
               </div>
 
@@ -184,9 +197,36 @@ export function Dashboard() {
               </div>
             </main>
 
-            {/* System Stability Bar - Fixed at bottom center */}
-            <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50">
-              <DevModeToggle />
+            {/* System Stability Bar - Fixed at bottom center - Only show for AWS */}
+            {dataSource === 'aws' && (
+              <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50">
+                <DevModeToggle />
+              </div>
+            )}
+
+            {/* Footer Credits - Fixed at bottom right */}
+            <div className="fixed bottom-4 right-4 z-40">
+              <p className="text-white text-opacity-60 text-xs font-medium" style={{ textShadow: '1px 1px 2px rgba(0, 0, 0, 0.8)' }}>
+                Made by{' '}
+                <a
+                  href="https://www.kanapp.net"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white text-opacity-80 hover:text-opacity-100 underline transition-opacity"
+                >
+                  kanapp.net
+                </a>
+                {' '}·{' '}
+                built with{' '}
+                <a
+                  href="https://kiro.dev/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white text-opacity-80 hover:text-opacity-100 underline transition-opacity"
+                >
+                  KIRO
+                </a>
+              </p>
             </div>
           </>
         ) : (

@@ -13,6 +13,10 @@ export class StorageService {
     POMODORO_TOTAL_SECONDS: 'devops_dashboard_pomodoro_total_seconds',
     SOUND_ENABLED: 'devops_dashboard_sound_enabled',
     REDUCED_MOTION: 'devops_dashboard_reduced_motion',
+    DATA_SOURCE: 'devops_dashboard_data_source',
+    AWS_ACCESS_KEY: 'devops_dashboard_aws_access_key',
+    AWS_SECRET_KEY: 'devops_dashboard_aws_secret_key',
+    AWS_REGION: 'devops_dashboard_aws_region',
   };
 
   /**
@@ -494,6 +498,149 @@ export class StorageService {
   }
 
   /**
+   * Get data source preference from storage
+   */
+  static getDataSource(): 'aws' | 'hackernews' {
+    if (!this.isStorageAvailable()) {
+      return 'hackernews'; // Default to Hacker News
+    }
+
+    try {
+      const value = localStorage.getItem(this.KEYS.DATA_SOURCE);
+      return value === 'aws' ? 'aws' : 'hackernews';
+    } catch (error) {
+      console.error('Failed to get data source preference:', error);
+      return 'hackernews';
+    }
+  }
+
+  /**
+   * Set data source preference in storage
+   */
+  static setDataSource(source: 'aws' | 'hackernews'): void {
+    if (!this.isStorageAvailable()) {
+      return;
+    }
+
+    try {
+      localStorage.setItem(this.KEYS.DATA_SOURCE, source);
+    } catch (error) {
+      console.error('Failed to set data source preference:', error);
+    }
+  }
+
+  /**
+   * Get AWS Access Key from storage
+   */
+  static getAwsAccessKey(): string | null {
+    if (!this.isStorageAvailable()) {
+      return null;
+    }
+
+    try {
+      return localStorage.getItem(this.KEYS.AWS_ACCESS_KEY);
+    } catch (error) {
+      this.handleStorageError(error, 'read');
+      return null;
+    }
+  }
+
+  /**
+   * Set AWS Access Key in storage
+   */
+  static setAwsAccessKey(key: string): void {
+    if (!this.isStorageAvailable()) {
+      throw new Error('Storage is not available');
+    }
+
+    // Validate and sanitize API key
+    const validation = validateApiKey(key);
+    if (!validation.isValid) {
+      throw new Error(validation.error || 'Invalid AWS Access Key');
+    }
+
+    try {
+      localStorage.setItem(this.KEYS.AWS_ACCESS_KEY, validation.sanitized);
+    } catch (error) {
+      this.handleStorageError(error, 'write');
+    }
+  }
+
+  /**
+   * Get AWS Secret Key from storage
+   */
+  static getAwsSecretKey(): string | null {
+    if (!this.isStorageAvailable()) {
+      return null;
+    }
+
+    try {
+      return localStorage.getItem(this.KEYS.AWS_SECRET_KEY);
+    } catch (error) {
+      this.handleStorageError(error, 'read');
+      return null;
+    }
+  }
+
+  /**
+   * Set AWS Secret Key in storage
+   */
+  static setAwsSecretKey(key: string): void {
+    if (!this.isStorageAvailable()) {
+      throw new Error('Storage is not available');
+    }
+
+    // AWS secret keys can contain special characters like +, /, =
+    // So we use a more lenient validation
+    const trimmed = key.trim();
+    if (!trimmed || trimmed.length < 10) {
+      throw new Error('Invalid AWS Secret Key');
+    }
+
+    try {
+      localStorage.setItem(this.KEYS.AWS_SECRET_KEY, trimmed);
+    } catch (error) {
+      this.handleStorageError(error, 'write');
+    }
+  }
+
+  /**
+   * Get AWS Region from storage
+   */
+  static getAwsRegion(): string | null {
+    if (!this.isStorageAvailable()) {
+      return null;
+    }
+
+    try {
+      return localStorage.getItem(this.KEYS.AWS_REGION);
+    } catch (error) {
+      this.handleStorageError(error, 'read');
+      return null;
+    }
+  }
+
+  /**
+   * Set AWS Region in storage
+   */
+  static setAwsRegion(region: string): void {
+    if (!this.isStorageAvailable()) {
+      throw new Error('Storage is not available');
+    }
+
+    const trimmed = region.trim();
+    if (!trimmed) {
+      throw new Error('Invalid AWS Region');
+    }
+
+    try {
+      localStorage.setItem(this.KEYS.AWS_REGION, trimmed);
+    } catch (error) {
+      this.handleStorageError(error, 'write');
+    }
+  }
+
+  /**
    * Clear all storage data (useful for testing or reset)
    */
   static clearAll(): void {
@@ -512,6 +659,10 @@ export class StorageService {
       localStorage.removeItem(this.KEYS.POMODORO_TOTAL_SECONDS);
       localStorage.removeItem(this.KEYS.SOUND_ENABLED);
       localStorage.removeItem(this.KEYS.REDUCED_MOTION);
+      localStorage.removeItem(this.KEYS.DATA_SOURCE);
+      localStorage.removeItem(this.KEYS.AWS_ACCESS_KEY);
+      localStorage.removeItem(this.KEYS.AWS_SECRET_KEY);
+      localStorage.removeItem(this.KEYS.AWS_REGION);
     } catch (error) {
       console.error('Failed to clear storage:', error);
     }
