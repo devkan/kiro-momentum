@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { Cloud, CloudRain, Sun, CloudSnow, Wind, AlertCircle } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { StorageService } from '../services/StorageService';
+import { ensureHttps } from '../utils/security';
 
 interface WeatherData {
   temperature: number;
@@ -15,7 +16,7 @@ interface WeatherState {
   error: string | null;
 }
 
-export function Weather() {
+export const Weather = memo(function Weather() {
   const { theme } = useTheme();
   const [weatherState, setWeatherState] = useState<WeatherState>({
     data: null,
@@ -66,9 +67,12 @@ export function Weather() {
         
         try {
           // Fetch weather data from OpenWeatherMap API
-          const response = await fetch(
-            `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`
-          );
+          const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`;
+          
+          // Ensure HTTPS is used
+          ensureHttps(apiUrl);
+          
+          const response = await fetch(apiUrl);
 
           if (!response.ok) {
             if (response.status === 401) {
@@ -134,11 +138,11 @@ export function Weather() {
   };
 
   // Apply theme-based styling
-  const cardBgClass = theme.mode === 'nightmare' 
-    ? 'bg-red-900 bg-opacity-20 border-red-500' 
-    : theme.mode === 'glitch' 
-    ? 'bg-gray-800 bg-opacity-30 border-gray-500' 
-    : 'bg-white bg-opacity-20 border-white';
+  // const cardBgClass = theme.mode === 'nightmare' 
+  //   ? 'bg-red-900 bg-opacity-20 border-red-500' 
+  //   : theme.mode === 'glitch' 
+  //   ? 'bg-gray-800 bg-opacity-30 border-gray-500' 
+  //   : 'bg-white bg-opacity-20 border-white';
   
   const textColorClass = theme.mode === 'nightmare' ? 'text-red-400' : 
                          theme.mode === 'glitch' ? 'text-gray-200' : 'text-white';
@@ -148,7 +152,12 @@ export function Weather() {
   // Loading state
   if (weatherState.isLoading) {
     return (
-      <div className={`p-3 rounded-xl backdrop-blur-md bg-white bg-opacity-10 ${textColorClass} shadow-lg transition-all duration-500 h-[88px] flex items-center`}>
+      <div 
+        className={`${textColorClass} transition-all duration-500 h-[88px] flex items-center`}
+        role="status"
+        aria-live="polite"
+        aria-label="Loading weather information"
+      >
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 animate-pulse bg-gray-300 bg-opacity-30 rounded-full"></div>
           <span className="text-sm font-medium">Loading...</span>
@@ -160,9 +169,14 @@ export function Weather() {
   // Error or geolocation denied state
   if (weatherState.error || !weatherState.data) {
     return (
-      <div className={`p-3 rounded-xl backdrop-blur-md bg-white bg-opacity-10 ${textColorClass} shadow-lg transition-all duration-500 h-[88px] flex items-center`}>
+      <div 
+        className={`${textColorClass} transition-all duration-500 h-[88px] flex items-center`}
+        role="status"
+        aria-live="polite"
+        aria-label="Weather information unavailable"
+      >
         <div className="flex items-center gap-2">
-          <AlertCircle className="w-6 h-6 opacity-70" />
+          <AlertCircle className="w-6 h-6 opacity-70" aria-hidden="true" />
           <span className="text-sm font-medium">Weather N/A</span>
         </div>
       </div>
@@ -171,20 +185,24 @@ export function Weather() {
 
   // Display weather data - compact horizontal layout matching dev mode height
   return (
-    <div className={`p-3 px-4 rounded-xl backdrop-blur-md bg-white bg-opacity-10 ${textColorClass} shadow-lg transition-all duration-500 ${glitchClass} h-[88px] flex items-center`}>
+    <div 
+      className={`${textColorClass} transition-all duration-500 ${glitchClass} h-[88px] flex items-center`}
+      role="region"
+      aria-label={`Current weather: ${weatherState.data.temperature} degrees, ${weatherState.data.description}`}
+    >
       <div className="flex items-center gap-3">
-        <div className="opacity-90 scale-75">
+        <div className="opacity-90 scale-110" aria-hidden="true">
           {getWeatherIcon(weatherState.data.icon)}
         </div>
         <div className="flex flex-col">
-          <span className="text-2xl font-bold tracking-tight drop-shadow-lg">
+          <span className="text-4xl font-bold tracking-tight drop-shadow-lg">
             {weatherState.data.temperature}°
           </span>
-          <span className="text-xs capitalize font-medium opacity-80">
+          <span className="text-sm capitalize font-medium opacity-80">
             {weatherState.data.description}
           </span>
         </div>
       </div>
     </div>
   );
-}
+});

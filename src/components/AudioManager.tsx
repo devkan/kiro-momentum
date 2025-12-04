@@ -3,14 +3,17 @@ import { Volume2, VolumeX } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 
 export function AudioManager() {
-  const { theme } = useTheme();
+  const { theme, soundEnabled } = useTheme();
   const [isMuted, setIsMuted] = useState(false);
   const [audioAvailable, setAudioAvailable] = useState(false);
   const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Initialize audio element
+  // Initialize audio element only when entering nightmare mode (lazy loading)
   useEffect(() => {
+    // Only load audio when entering nightmare mode
+    if (theme.mode !== 'nightmare' || audioRef.current) return;
+
     const audio = new Audio();
     
     // Try to load siren sound first, fallback to heartbeat
@@ -58,14 +61,14 @@ export function AudioManager() {
         audioRef.current = null;
       }
     };
-  }, []);
+  }, [theme.mode]);
 
   // Handle audio playback based on theme mode
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio || !audioAvailable) return;
 
-    const shouldPlay = theme.mode === 'nightmare' && theme.soundEnabled && !isMuted;
+    const shouldPlay = theme.mode === 'nightmare' && theme.soundEnabled && soundEnabled && !isMuted;
 
     if (shouldPlay) {
       // Try to play audio
@@ -89,7 +92,7 @@ export function AudioManager() {
       audio.pause();
       setAutoplayBlocked(false);
     }
-  }, [theme.mode, theme.soundEnabled, isMuted, audioAvailable]);
+  }, [theme.mode, theme.soundEnabled, soundEnabled, isMuted, audioAvailable]);
 
   // Handle manual play when autoplay is blocked
   const handleManualPlay = () => {
@@ -110,8 +113,8 @@ export function AudioManager() {
     setIsMuted(!isMuted);
   };
 
-  // Don't render anything if audio is not available
-  if (!audioAvailable) {
+  // Don't render anything if audio is not available or sound is disabled
+  if (!audioAvailable || !soundEnabled) {
     return null;
   }
 

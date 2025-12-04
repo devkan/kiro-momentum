@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { ThemeMode, ThemeContextValue } from '../types';
+import { preloadHorrorFonts } from '../utils/assetLoader';
+import { StorageService } from '../services/StorageService';
 
 // Theme configurations for each mode
 const PEACEFUL_MODE: ThemeMode = {
@@ -57,25 +59,50 @@ interface ThemeProviderProps {
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const [healthStatus, setHealthStatus] = useState<number>(100);
   const [theme, setTheme] = useState<ThemeMode>(resolveMode(100));
+  const [soundEnabled, setSoundEnabled] = useState<boolean>(() => StorageService.getSoundEnabled());
+  const [reducedMotion, setReducedMotion] = useState<boolean>(() => StorageService.getReducedMotion());
 
   // Update theme when health status changes
   useEffect(() => {
     const newTheme = resolveMode(healthStatus);
+    // Override sound based on user preference
+    newTheme.soundEnabled = newTheme.soundEnabled && soundEnabled;
     setTheme(newTheme);
     
     // Update CSS custom properties for smooth transitions
-    updateCSSProperties(newTheme);
-  }, [healthStatus]);
+    updateCSSProperties(newTheme, reducedMotion);
+    
+    // Preload horror fonts when entering glitch or nightmare mode
+    if (newTheme.mode === 'glitch' || newTheme.mode === 'nightmare') {
+      preloadHorrorFonts();
+    }
+  }, [healthStatus, soundEnabled, reducedMotion]);
 
   // Memoize setHealthStatus to prevent unnecessary re-renders
   const setHealthStatusMemoized = useCallback((status: number) => {
     setHealthStatus(status);
   }, []);
 
+  // Memoize setSoundEnabled with storage persistence
+  const setSoundEnabledMemoized = useCallback((enabled: boolean) => {
+    setSoundEnabled(enabled);
+    StorageService.setSoundEnabled(enabled);
+  }, []);
+
+  // Memoize setReducedMotion with storage persistence
+  const setReducedMotionMemoized = useCallback((enabled: boolean) => {
+    setReducedMotion(enabled);
+    StorageService.setReducedMotion(enabled);
+  }, []);
+
   const value: ThemeContextValue = {
     theme,
     healthStatus,
     setHealthStatus: setHealthStatusMemoized,
+    soundEnabled,
+    setSoundEnabled: setSoundEnabledMemoized,
+    reducedMotion,
+    setReducedMotion: setReducedMotionMemoized,
   };
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
@@ -91,7 +118,7 @@ export function useTheme(): ThemeContextValue {
 }
 
 // Helper function to update CSS custom properties
-function updateCSSProperties(theme: ThemeMode): void {
+function updateCSSProperties(theme: ThemeMode, reducedMotion: boolean): void {
   const root = document.documentElement;
   
   root.style.setProperty('--font-primary', theme.fontFamily);
@@ -107,7 +134,14 @@ function updateCSSProperties(theme: ThemeMode): void {
                          theme.mode === 'glitch' ? '0.1' : '0';
   root.style.setProperty('--overlay-opacity', overlayOpacity);
   
-  // Set glitch intensity
-  const glitchIntensity = theme.textGlitch ? '1' : '0';
+  // Set glitch intensity (disable if reduced motion is enabled)
+  const glitchIntensity = (theme.textGlitch && !reducedMotion) ? '1' : '0';
   root.style.setProperty('--glitch-intensity', glitchIntensity);
+  
+  // Add reduced motion class to body
+  if (reducedMotion) {
+    root.classList.add('reduce-motion');
+  } else {
+    root.classList.remove('reduce-motion');
+  }
 }

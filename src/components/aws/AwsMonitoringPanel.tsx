@@ -9,7 +9,7 @@ import { Cloud, RefreshCw } from 'lucide-react';
 import { USE_MOCK_DATA } from '../../config/awsConfig';
 
 export const AwsMonitoringPanel = memo(function AwsMonitoringPanel() {
-  const { theme, setHealthStatus } = useTheme();
+  const { setHealthStatus } = useTheme();
   const [costsPaused, setCostsPaused] = useState(false);
   const [hasInitialData, setHasInitialData] = useState(false);
 
@@ -49,13 +49,13 @@ export const AwsMonitoringPanel = memo(function AwsMonitoringPanel() {
   }, []);
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-8 py-8">
+    <div className="w-full max-w-7xl mx-auto px-8 py-8 font-mono">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <Cloud size={24} className="text-white" />
-          <h2 className="text-2xl font-bold text-white">
-            AWS Monitoring
+          <h2 className="text-2xl font-bold text-white tracking-wider">
+            AWS MONITORING
           </h2>
           {USE_MOCK_DATA && (
             <span className="text-xs bg-blue-500 bg-opacity-30 text-blue-200 px-2 py-1 rounded">
@@ -65,20 +65,20 @@ export const AwsMonitoringPanel = memo(function AwsMonitoringPanel() {
         </div>
         <button
           onClick={handleRefreshAll}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white bg-opacity-10 hover:bg-opacity-20 text-white transition-all"
+          className="flex items-center gap-2 px-5 py-3 rounded-lg bg-white bg-opacity-10 hover:bg-opacity-20 text-white transition-all"
           disabled={isLoading}
         >
-          <RefreshCw size={16} className={isLoading ? 'animate-spin' : ''} />
-          <span className="text-sm">Refresh All</span>
+          <RefreshCw size={20} className={isLoading ? 'animate-spin' : ''} />
+          <span className="text-base font-semibold">Refresh All</span>
         </button>
       </div>
 
       {/* Health Score Indicator */}
-      <div className="mb-6 p-4 rounded-xl bg-white bg-opacity-10 backdrop-blur-md border-2 border-white border-opacity-20 transition-all duration-300">
+      <div className="mb-6 p-5 rounded-xl bg-white bg-opacity-10 backdrop-blur-md border-2 border-white border-opacity-20 transition-all duration-300">
         <div className="flex items-center justify-between">
-          <span className="text-white text-sm font-medium">System Health Score</span>
-          <div className="flex items-center gap-3">
-            <div className="w-48 h-2 bg-black bg-opacity-30 rounded-full overflow-hidden">
+          <span className="text-white text-lg font-bold tracking-wider">SYSTEM HEALTH SCORE</span>
+          <div className="flex items-center gap-4">
+            <div className="w-64 h-3 bg-black bg-opacity-30 rounded-full overflow-hidden">
               <div
                 className={`h-full transition-all duration-700 ease-out ${
                   healthScore >= 80
@@ -90,7 +90,7 @@ export const AwsMonitoringPanel = memo(function AwsMonitoringPanel() {
                 style={{ width: `${healthScore}%` }}
               />
             </div>
-            <span className="text-white text-xl font-bold w-12 text-right transition-all duration-300">
+            <span className="text-white text-2xl font-bold w-16 text-right transition-all duration-300">
               {healthScore}
             </span>
           </div>

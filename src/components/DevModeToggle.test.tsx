@@ -11,8 +11,8 @@ describe('DevModeToggle', () => {
       </ThemeProvider>
     );
 
-    expect(screen.getByText(/Dev Mode/i)).toBeInTheDocument();
-    expect(screen.getByText(/Health Status:/i)).toBeInTheDocument();
+    expect(screen.getByText(/SYSTEM STABILITY/i)).toBeInTheDocument();
+    expect(screen.getByText(/100%/i)).toBeInTheDocument();
   });
 
   it('displays current mode based on health status', () => {
@@ -22,8 +22,9 @@ describe('DevModeToggle', () => {
       </ThemeProvider>
     );
 
-    // Initial state should be Peaceful (100)
-    expect(screen.getByText('Peaceful')).toBeInTheDocument();
+    // Initial state should be STABLE (100)
+    const stableElements = screen.getAllByText('STABLE');
+    expect(stableElements.length).toBeGreaterThan(0);
   });
 
   it('updates health status when slider changes', () => {
@@ -33,22 +34,25 @@ describe('DevModeToggle', () => {
       </ThemeProvider>
     );
 
-    const slider = screen.getByRole('slider', { name: /health status slider/i });
+    const slider = screen.getByRole('slider', { name: /system stability slider/i });
     
-    // Change to Glitch mode (60)
+    // Change to DEGRADED mode (60)
     fireEvent.change(slider, { target: { value: '60' } });
-    expect(screen.getByText('Glitch')).toBeInTheDocument();
-    expect(screen.getByText(/Health Status: 60/i)).toBeInTheDocument();
+    const degradedElements = screen.getAllByText('DEGRADED');
+    expect(degradedElements.length).toBeGreaterThan(0);
+    expect(screen.getByText(/60%/i)).toBeInTheDocument();
 
-    // Change to Nightmare mode (20)
+    // Change to CRITICAL mode (20)
     fireEvent.change(slider, { target: { value: '20' } });
-    expect(screen.getByText('Nightmare')).toBeInTheDocument();
-    expect(screen.getByText(/Health Status: 20/i)).toBeInTheDocument();
+    const criticalElements = screen.getAllByText('CRITICAL');
+    expect(criticalElements.length).toBeGreaterThan(0);
+    expect(screen.getByText(/20%/i)).toBeInTheDocument();
 
-    // Change back to Peaceful mode (90)
+    // Change back to STABLE mode (90)
     fireEvent.change(slider, { target: { value: '90' } });
-    expect(screen.getByText('Peaceful')).toBeInTheDocument();
-    expect(screen.getByText(/Health Status: 90/i)).toBeInTheDocument();
+    const stableElements = screen.getAllByText('STABLE');
+    expect(stableElements.length).toBeGreaterThan(0);
+    expect(screen.getByText(/90%/i)).toBeInTheDocument();
   });
 
   it('displays threshold indicators', () => {
@@ -58,9 +62,15 @@ describe('DevModeToggle', () => {
       </ThemeProvider>
     );
 
-    // Check for threshold values in the UI
-    expect(screen.getByText('80')).toBeInTheDocument();
-    expect(screen.getByText('40')).toBeInTheDocument();
+    // Check for status labels in the UI (they appear twice - once as status, once as label)
+    const criticalElements = screen.getAllByText('CRITICAL');
+    expect(criticalElements.length).toBeGreaterThanOrEqual(1);
+    
+    const degradedElements = screen.getAllByText('DEGRADED');
+    expect(degradedElements.length).toBeGreaterThanOrEqual(1);
+    
+    const stableElements = screen.getAllByText('STABLE');
+    expect(stableElements.length).toBeGreaterThanOrEqual(1);
   });
 
   it('slider has correct min and max values', () => {
@@ -70,7 +80,7 @@ describe('DevModeToggle', () => {
       </ThemeProvider>
     );
 
-    const slider = screen.getByRole('slider', { name: /health status slider/i }) as HTMLInputElement;
+    const slider = screen.getByRole('slider', { name: /system stability slider/i }) as HTMLInputElement;
     
     expect(slider.min).toBe('0');
     expect(slider.max).toBe('100');

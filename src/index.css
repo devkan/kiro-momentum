@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -83,6 +85,69 @@ body {
   100% {
     transform: translate(0);
   }
+}
+
+/* Reduced motion support - disable animations */
+@media (prefers-reduced-motion: reduce) {
+  .glitch,
+  .glitch-text,
+  .scanlines,
+  .flicker,
+  .pulse-red,
+  .crt-scanlines,
+  .log-flicker-red {
+    animation: none !important;
+  }
+  
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Manual reduced motion class */
+.reduce-motion .glitch,
+.reduce-motion .glitch-text,
+.reduce-motion .scanlines,
+.reduce-motion .flicker,
+.reduce-motion .pulse-red,
+.reduce-motion .crt-scanlines,
+.reduce-motion .log-flicker-red {
+  animation: none !important;
+}
+
+.reduce-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+/* Improved focus styles for accessibility */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Skip to main content link for keyboard navigation */
+.skip-to-main {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #3b82f6;
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 100;
+  border-radius: 0 0 4px 0;
+}
+
+.skip-to-main:focus {
+  top: 0;
 }
 
 .scanline {
@@ -340,4 +405,45 @@ input[type="range"]::-moz-range-thumb {
 
 .aws-card-value:hover {
   transform: scale(1.02);
+}
+
+/* CRT Scanline overlay effect */
+.crt-scanlines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9998;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0.05) 1px,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0) 3px
+  );
+  animation: crt-flicker 0.15s infinite;
+}
+
+@keyframes crt-flicker {
+  0% { opacity: 0.95; }
+  50% { opacity: 1; }
+  100% { opacity: 0.95; }
+}
+
+/* Red flickering text for logs in nightmare mode */
+.log-flicker-red {
+  animation: log-flicker-red 0.3s infinite;
+}
+
+@keyframes log-flicker-red {
+  0%, 100% { 
+    color: #ef4444;
+    text-shadow: 0 0 5px rgba(239, 68, 68, 0.5);
+  }
+  50% { 
+    color: #dc2626;
+    text-shadow: 0 0 10px rgba(239, 68, 68, 0.8);
+  }
 }

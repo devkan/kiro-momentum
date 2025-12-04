@@ -79,6 +79,7 @@ export class AwsDataService {
         
         data.events.push({
           timestamp: Date.now(),
+          ingestionTime: Date.now(),
           message: `${level} ${timestamp} ${message}`,
         });
         
@@ -130,7 +131,7 @@ export class AwsDataService {
       // Randomly change one server's state occasionally (10% chance)
       if (Math.random() < 0.1 && data.InstanceStatuses.length > 0) {
         const randomIndex = Math.floor(Math.random() * data.InstanceStatuses.length);
-        const states = ['running', 'stopped'];
+        const states: Array<'running' | 'stopped'> = ['running', 'stopped'];
         data.InstanceStatuses[randomIndex].InstanceState.Name = 
           states[Math.floor(Math.random() * states.length)];
       }

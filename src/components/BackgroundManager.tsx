@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 import { StorageService } from '../services/StorageService';
+import { loadHorrorBackground } from '../utils/assetLoader';
+import { ensureHttps } from '../utils/security';
 
 // Import local fallback images (all jpg format based on actual files)
 import fallback1 from '../assets/fallback-1.jpg';
@@ -8,7 +10,6 @@ import fallback2 from '../assets/fallback-2.jpg';
 import fallback3 from '../assets/fallback-3.jpg';
 import fallback4 from '../assets/fallback-4.jpg';
 import fallback5 from '../assets/fallback-5.jpg';
-import horrorBackground from '../assets/horror-background.jpg';
 
 const LOCAL_FALLBACK_IMAGES = [
   fallback1,
@@ -24,13 +25,16 @@ interface BackgroundState {
   source: 'unsplash' | 'local' | 'horror';
 }
 
-export function BackgroundManager() {
+export const BackgroundManager = memo(function BackgroundManager() {
   const { theme } = useTheme();
   const [backgroundState, setBackgroundState] = useState<BackgroundState>({
     imageUrl: '',
     isLoading: true,
     source: 'local',
   });
+
+  // Store horror background URL (lazy loaded)
+  const [horrorBackgroundUrl, setHorrorBackgroundUrl] = useState<string>('');
 
   // Preload local fallback images for performance
   useEffect(() => {
@@ -41,14 +45,23 @@ export function BackgroundManager() {
         console.warn(`Failed to preload image: ${src}`);
       };
     });
-    
-    // Preload horror background
-    const horrorImg = new Image();
-    horrorImg.src = horrorBackground;
-    horrorImg.onerror = () => {
-      console.warn('Failed to preload horror background');
-    };
   }, []);
+
+  // Lazy load horror background only when needed
+  useEffect(() => {
+    if (theme.mode === 'nightmare' && !horrorBackgroundUrl) {
+      loadHorrorBackground()
+        .then(url => {
+          setHorrorBackgroundUrl(url);
+          // Preload the image
+          const img = new Image();
+          img.src = url;
+        })
+        .catch(err => {
+          console.warn('Failed to load horror background:', err);
+        });
+    }
+  }, [theme.mode, horrorBackgroundUrl]);
 
   // Helper function to get a random local fallback image
   const getRandomLocalImage = (): string => {
@@ -60,19 +73,12 @@ export function BackgroundManager() {
     return LOCAL_FALLBACK_IMAGES[randomIndex];
   };
 
-  // Fetch background image based on mode and API key availability
+  // Store the original background image (non-horror)
+  const [originalBackground, setOriginalBackground] = useState<string>('');
+
+  // Fetch background image once on initial load
   useEffect(() => {
     const fetchBackground = async () => {
-      // Override with horror image in Nightmare Mode
-      if (theme.mode === 'nightmare') {
-        setBackgroundState({
-          imageUrl: horrorBackground,
-          isLoading: false,
-          source: 'horror',
-        });
-        return;
-      }
-
       // Check for Unsplash API key
       const apiKey = StorageService.getUnsplashKey();
 
@@ -81,14 +87,16 @@ export function BackgroundManager() {
         try {
           setBackgroundState((prev) => ({ ...prev, isLoading: true }));
           
-          const response = await fetch(
-            `https://api.unsplash.com/photos/random?orientation=landscape&query=nature`,
-            {
-              headers: {
-                Authorization: `Client-ID ${apiKey}`,
-              },
-            }
-          );
+          const apiUrl = `https://api.unsplash.com/photos/random?orientation=landscape&query=nature`;
+          
+          // Ensure HTTPS is used
+          ensureHttps(apiUrl);
+          
+          const response = await fetch(apiUrl, {
+            headers: {
+              Authorization: `Client-ID ${apiKey}`,
+            },
+          });
 
           if (!response.ok) {
             throw new Error(`Unsplash API error: ${response.status}`);
@@ -97,6 +105,10 @@ export function BackgroundManager() {
           const data = await response.json();
           const imageUrl = data.urls.regular;
 
+          // Validate that the returned image URL is also HTTPS
+          ensureHttps(imageUrl);
+
+          setOriginalBackground(imageUrl);
           setBackgroundState({
             imageUrl,
             isLoading: false,
@@ -105,16 +117,20 @@ export function BackgroundManager() {
         } catch (error) {
           console.error('Failed to fetch from Unsplash, falling back to local image:', error);
           // Fall back to local image
+          const localImage = getRandomLocalImage();
+          setOriginalBackground(localImage);
           setBackgroundState({
-            imageUrl: getRandomLocalImage(),
+            imageUrl: localImage,
             isLoading: false,
             source: 'local',
           });
         }
       } else {
         // No API key, use local fallback
+        const localImage = getRandomLocalImage();
+        setOriginalBackground(localImage);
         setBackgroundState({
-          imageUrl: getRandomLocalImage(),
+          imageUrl: localImage,
           isLoading: false,
           source: 'local',
         });
@@ -122,7 +138,26 @@ export function BackgroundManager() {
     };
 
     fetchBackground();
-  }, [theme.mode]); // Re-fetch when mode changes
+  }, []); // Only run once on mount
+
+  // Switch between original and horror background based on theme mode
+  useEffect(() => {
+    if (!originalBackground) return; // Wait for original background to load
+
+    if (theme.mode === 'nightmare' && horrorBackgroundUrl) {
+      setBackgroundState((prev) => ({
+        ...prev,
+        imageUrl: horrorBackgroundUrl,
+        source: 'horror',
+      }));
+    } else {
+      setBackgroundState((prev) => ({
+        ...prev,
+        imageUrl: originalBackground,
+        source: prev.source === 'horror' ? 'local' : prev.source,
+      }));
+    }
+  }, [theme.mode, originalBackground, horrorBackgroundUrl]); // Switch when mode changes
 
   // Handle image load errors
   const [imageError, setImageError] = useState(false);
@@ -178,4 +213,4 @@ export function BackgroundManager() {
       )}
     </div>
   );
-}
+});

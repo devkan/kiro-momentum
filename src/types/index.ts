@@ -32,4 +32,26 @@ export interface ThemeContextValue {
   theme: ThemeMode;
   healthStatus: number;
   setHealthStatus: (status: number) => void;
+  soundEnabled: boolean;
+  setSoundEnabled: (enabled: boolean) => void;
+  reducedMotion: boolean;
+  setReducedMotion: (enabled: boolean) => void;
+}
+
+export interface PomodoroConfig {
+  workDuration: number;    // minutes
+  breakDuration: number;   // minutes
+  autoRepeat: boolean;
+}
+
+export type PomodoroPhase = 'work' | 'break' | 'idle';
+
+export interface PomodoroState {
+  isActive: boolean;
+  isPaused: boolean;
+  phase: PomodoroPhase;
+  remainingSeconds: number;
+  totalSeconds: number;
+  endTime: number | null;  // Unix timestamp for persistence
+  config: PomodoroConfig;
 }

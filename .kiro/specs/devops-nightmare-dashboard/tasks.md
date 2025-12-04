@@ -297,7 +297,12 @@
 
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 18. Performance optimization
+- [x] 18. Performance optimization
+
+
+
+
+
   - Implement React.memo for Weather and Background components
   - Add debouncing to todo list storage writes (300ms)
   - Lazy load Settings Modal
@@ -305,7 +310,12 @@
   - Optimize Tailwind bundle with PurgeCSS
   - _Requirements: Performance Considerations_
 
-- [ ] 19. Accessibility improvements
+- [x] 19. Accessibility improvements
+
+
+
+
+
   - Add ARIA labels to icon buttons
   - Implement keyboard navigation for all interactive elements
   - Add reduced motion media query for glitch effects
@@ -313,17 +323,127 @@
   - Add option to disable sound effects
   - _Requirements: Accessibility_
 
-- [ ] 20. Security hardening
+- [x] 20. Security hardening
+
+
+
+
+
   - Sanitize user input for name and todos (XSS prevention)
   - Validate API keys before storage
   - Add Content Security Policy headers
   - Ensure all API calls use HTTPS
   - _Requirements: Security Considerations_
 
-- [ ] 21. Final polish and testing
+- [ ] 21. Implement Pomodoro Timer Feature
+
+
+
+  - Create `usePomodoro` custom hook for timer logic
+  - Implement timer state management (start, pause, resume, reset, skip)
+  - Add LocalStorage persistence for timer state and config
+  - Implement recovery logic for page refreshes
+  - _Requirements: Pomodoro Timer Feature_
+
+- [x] 21.1 Create Pomodoro Configuration Modal
+
+
+  - Build modal UI with work/break duration inputs
+  - Add auto-repeat checkbox
+  - Implement form validation (1-60 min work, 1-30 min break)
+  - Save configuration to LocalStorage
+  - _Requirements: Pomodoro Timer Feature_
+
+- [x] 21.2 Enhance Clock Component with Timer Display
+
+
+  - Add conditional rendering for countdown vs current time
+  - Implement SVG Circular Progress Ring component
+  - Add timer label that changes based on phase and mode
+  - Integrate usePomodoro hook into Clock component
+  - _Requirements: Pomodoro Timer Feature_
+
+- [x] 21.3 Implement Circular Progress Ring
+
+
+  - Create SVG circle with stroke-dasharray animation
+  - Add theme-based styling (green/yellow/red)
+  - Implement dripping effect for Nightmare Mode using SVG filters
+  - Add smooth progress animation
+  - _Requirements: Pomodoro Timer Feature_
+
+- [x] 21.4 Add Pomodoro Timer Button to Toolbar
+
+
+  - Create tomato/timer icon button
+  - Position in bottom right toolbar (near settings)
+  - Add state-based color changes (idle/active/break)
+  - Connect to configuration modal
+  - _Requirements: Pomodoro Timer Feature_
+
+- [x] 21.5 Integrate Pomodoro Audio Effects
+
+
+  - Add ticking sound for Nightmare Mode
+  - Implement speed-up effect for last 60 seconds
+  - Add phase completion alarm sounds (peaceful/nightmare variants)
+  - Respect global mute setting
+  - Handle audio autoplay restrictions
+  - _Requirements: Pomodoro Timer Feature_
+
+- [x] 21.6 Write property test for Pomodoro Timer
+
+
+
+
+
+
+  - **Property 11: Timer countdown accuracy**
+  - **Validates: Pomodoro Timer accuracy**
+
+- [x] 21.7 Write property test for Pomodoro Timer
+
+
+
+
+
+
+  - **Property 12: Timer persistence round trip**
+  - **Validates: Timer persistence across page reloads**
+
+- [x] 21.8 Write property test for Pomodoro Timer
+
+
+
+
+
+
+  - **Property 13: Phase transition consistency**
+  - **Validates: Phase transition logic**
+
+- [x] 21.9 Write unit tests for Pomodoro Timer
+
+
+
+
+
+
+  - Test timer start/pause/resume/reset functionality
+  - Test phase transitions (work → break → work)
+  - Test auto-repeat behavior
+  - Test LocalStorage persistence and recovery
+  - Test audio playback in different modes
+
+- [x] 22. Final polish and testing
+
+
+
+
+
   - Test all three modes (Peaceful, Glitch, Nightmare)
   - Verify smooth transitions between modes
   - Test error handling for all API failures
   - Verify LocalStorage fallbacks work correctly
+  - Test Pomodoro Timer in all theme modes
   - Test on multiple browsers (Chrome, Firefox, Safari)
   - _Requirements: All_

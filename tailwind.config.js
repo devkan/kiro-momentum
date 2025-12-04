@@ -4,6 +4,14 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  // Safelist classes that are dynamically generated
+  safelist: [
+    'animate-glitch',
+    'animate-flicker',
+    'animate-pulse-red',
+    'glitch-text',
+    'crt-scanlines',
+  ],
   theme: {
     extend: {
       fontFamily: {

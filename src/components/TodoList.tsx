@@ -1,23 +1,57 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Trash2, Plus } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import { Todo } from '../types';
 import { StorageService } from '../services/StorageService';
 import { useTheme } from '../contexts/ThemeContext';
+import { sanitizeTodoText } from '../utils/security';
+
+const CREEPY_TASKS = [
+  "DON'T LOOK BEHIND YOU",
+  "SYSTEM FAILURE IMMINENT",
+  "RUN WHILE YOU STILL CAN",
+  "THEY'RE WATCHING",
+  "ERROR: REALITY NOT FOUND",
+  "THE SERVERS ARE SCREAMING",
+  "BACKUP YOUR SOUL",
+  "CONNECTION TO SANITY LOST",
+];
 
 export function TodoList() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [inputValue, setInputValue] = useState('');
-  const { theme } = useTheme();
+  const { theme, healthStatus } = useTheme();
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const [originalTodos, setOriginalTodos] = useState<Todo[]>([]);
 
   // Load todos from LocalStorage on mount
   useEffect(() => {
     const savedTodos = StorageService.getTodos();
     setTodos(savedTodos);
+    setOriginalTodos(savedTodos);
   }, []);
+
+  // Replace todos with creepy tasks when health < 30
+  useEffect(() => {
+    if (healthStatus < 30) {
+      // Generate creepy todos
+      const creepyTodos: Todo[] = CREEPY_TASKS.slice(0, Math.min(5, CREEPY_TASKS.length)).map((text, index) => ({
+        id: `creepy-${index}`,
+        text,
+        createdAt: Date.now() - index * 1000,
+        completed: false,
+      }));
+      setTodos(creepyTodos);
+    } else {
+      // Restore original todos
+      setTodos(originalTodos);
+    }
+  }, [healthStatus, originalTodos]);
 
   // Persist todos to LocalStorage with debouncing (300ms)
   useEffect(() => {
+    // Don't save creepy tasks
+    if (healthStatus < 30) return;
+
     // Clear existing timer
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
@@ -27,6 +61,7 @@ export function TodoList() {
     debounceTimerRef.current = setTimeout(() => {
       try {
         StorageService.setTodos(todos);
+        setOriginalTodos(todos);
       } catch (error) {
         console.error('Failed to save todos:', error);
       }
@@ -38,38 +73,54 @@ export function TodoList() {
         clearTimeout(debounceTimerRef.current);
       }
     };
-  }, [todos]);
+  }, [todos, healthStatus]);
 
   // Add todo with whitespace validation
   const handleAddTodo = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate: reject empty or whitespace-only strings
-    if (!inputValue.trim()) {
+    // Don't allow adding todos in nightmare mode
+    if (healthStatus < 30) return;
+    
+    // Sanitize and validate input
+    const sanitizedText = sanitizeTodoText(inputValue);
+    if (!sanitizedText.trim()) {
       return;
     }
 
     const newTodo: Todo = {
       id: crypto.randomUUID(),
-      text: inputValue.trim(),
+      text: sanitizedText.trim(),
       createdAt: Date.now(),
       completed: false,
     };
 
-    setTodos([...todos, newTodo]);
+    const newTodos = [...todos, newTodo];
+    setTodos(newTodos);
+    setOriginalTodos(newTodos);
     setInputValue('');
   };
 
   // Toggle todo completion status
   const handleToggleTodo = (id: string) => {
-    setTodos(todos.map(todo => 
+    // Don't allow toggling in nightmare mode
+    if (healthStatus < 30) return;
+    
+    const updatedTodos = todos.map(todo => 
       todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    ));
+    );
+    setTodos(updatedTodos);
+    setOriginalTodos(updatedTodos);
   };
 
   // Delete todo
   const handleDeleteTodo = (id: string) => {
-    setTodos(todos.filter(todo => todo.id !== id));
+    // Don't allow deleting in nightmare mode
+    if (healthStatus < 30) return;
+    
+    const updatedTodos = todos.filter(todo => todo.id !== id);
+    setTodos(updatedTodos);
+    setOriginalTodos(updatedTodos);
   };
 
   // Apply glitch animation class in Glitch Mode
@@ -78,18 +129,20 @@ export function TodoList() {
   return (
     <div className="w-full mx-auto">
       {/* Main input field - centered and prominent */}
-      <form onSubmit={handleAddTodo} className="mb-8">
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          placeholder="What is your focus for today?"
-          className={`w-full px-6 py-4 text-center text-xl rounded-xl bg-white/10 backdrop-blur-md border-2 border-white/30 
-            text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-white/50
-            transition-all ${glitchClass}`}
-          aria-label="New task input"
-        />
-      </form>
+      {healthStatus >= 30 && (
+        <form onSubmit={handleAddTodo} className="mb-8">
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            placeholder="What is your focus for today?"
+            className={`w-full px-6 py-4 text-center text-xl rounded-xl bg-white/10 backdrop-blur-md border-2 border-white/30 
+              text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-white/50
+              transition-all ${glitchClass}`}
+            aria-label="New task input"
+          />
+        </form>
+      )}
 
       {/* Todo list */}
       <ul className="space-y-3" role="list" aria-label="Todo list">

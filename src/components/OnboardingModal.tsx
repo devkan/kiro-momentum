@@ -1,5 +1,6 @@
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 import { StorageService } from '../services/StorageService';
+import { sanitizeInput } from '../utils/security';
 
 interface OnboardingModalProps {
   onComplete: (name: string) => void;
@@ -9,31 +10,49 @@ export function OnboardingModal({ onComplete }: OnboardingModalProps) {
   const [name, setName] = useState('');
   const [error, setError] = useState('');
 
+  // Handle Escape key (though we don't allow closing this modal)
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        // Prevent closing - user must provide name
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, []);
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     
-    // Validate that name is not empty or just whitespace
-    const trimmedName = name.trim();
-    if (!trimmedName) {
+    // Sanitize and validate name
+    const sanitizedName = sanitizeInput(name);
+    if (!sanitizedName) {
       setError('Please enter your name');
       return;
     }
 
     try {
-      // Save name to LocalStorage
-      StorageService.setUserName(trimmedName);
+      // Save name to LocalStorage (already sanitized in StorageService)
+      StorageService.setUserName(sanitizedName);
       
-      // Call completion callback
-      onComplete(trimmedName);
+      // Call completion callback with sanitized name
+      onComplete(sanitizedName);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save name');
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div 
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="onboarding-title"
+    >
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full mx-4">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
+        <h2 id="onboarding-title" className="text-2xl font-bold text-gray-900 mb-4">
           Welcome to DevOps Dashboard
         </h2>
         <p className="text-gray-600 mb-6">

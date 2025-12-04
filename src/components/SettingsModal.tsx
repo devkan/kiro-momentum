@@ -1,6 +1,7 @@
 import { useState, FormEvent, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { StorageService } from '../services/StorageService';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -9,21 +10,40 @@ interface SettingsModalProps {
 }
 
 export function SettingsModal({ isOpen, onClose, onApiKeySaved }: SettingsModalProps) {
+  const { soundEnabled, setSoundEnabled, reducedMotion, setReducedMotion } = useTheme();
   const [unsplashKey, setUnsplashKey] = useState('');
   const [weatherKey, setWeatherKey] = useState('');
+  const [localSoundEnabled, setLocalSoundEnabled] = useState(soundEnabled);
+  const [localReducedMotion, setLocalReducedMotion] = useState(reducedMotion);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
-  // Load existing API keys from storage when modal opens
+  // Load existing API keys and preferences from storage when modal opens
   useEffect(() => {
     if (isOpen) {
       const existingUnsplashKey = StorageService.getUnsplashKey();
       const existingWeatherKey = StorageService.getWeatherKey();
       setUnsplashKey(existingUnsplashKey || '');
       setWeatherKey(existingWeatherKey || '');
+      setLocalSoundEnabled(soundEnabled);
+      setLocalReducedMotion(reducedMotion);
       setError('');
       setSuccessMessage('');
     }
+  }, [isOpen, soundEnabled, reducedMotion]);
+
+  // Handle Escape key to close modal
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
   }, [isOpen]);
 
   const handleSubmit = (e: FormEvent) => {
@@ -43,6 +63,10 @@ export function SettingsModal({ isOpen, onClose, onApiKeySaved }: SettingsModalP
       if (trimmedWeatherKey) {
         StorageService.setWeatherKey(trimmedWeatherKey);
       }
+      
+      // Save accessibility preferences
+      setSoundEnabled(localSoundEnabled);
+      setReducedMotion(localReducedMotion);
       
       // Show success message
       setSuccessMessage('Settings saved successfully!');
@@ -73,7 +97,12 @@ export function SettingsModal({ isOpen, onClose, onApiKeySaved }: SettingsModalP
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div 
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="settings-title"
+    >
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full mx-4 relative">
         {/* Close button */}
         <button
@@ -84,7 +113,7 @@ export function SettingsModal({ isOpen, onClose, onApiKeySaved }: SettingsModalP
           <X size={24} />
         </button>
 
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
+        <h2 id="settings-title" className="text-2xl font-bold text-gray-900 mb-4">
           Settings
         </h2>
         <p className="text-gray-600 mb-6">
@@ -157,11 +186,52 @@ export function SettingsModal({ isOpen, onClose, onApiKeySaved }: SettingsModalP
             </p>
           </div>
 
+          {/* Accessibility Settings */}
+          <div className="mb-4 pt-4 border-t border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">Accessibility</h3>
+            
+            {/* Sound Effects Toggle */}
+            <div className="flex items-center justify-between mb-3">
+              <label htmlFor="soundEnabled" className="text-sm font-medium text-gray-700">
+                Enable Sound Effects
+              </label>
+              <input
+                id="soundEnabled"
+                type="checkbox"
+                checked={localSoundEnabled}
+                onChange={(e) => setLocalSoundEnabled(e.target.checked)}
+                className="w-5 h-5 rounded border-2 border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                aria-describedby="soundEnabled-description"
+              />
+            </div>
+            <p id="soundEnabled-description" className="text-xs text-gray-500 mb-4">
+              Play horror sound effects in Nightmare Mode
+            </p>
+
+            {/* Reduced Motion Toggle */}
+            <div className="flex items-center justify-between mb-3">
+              <label htmlFor="reducedMotion" className="text-sm font-medium text-gray-700">
+                Reduce Motion
+              </label>
+              <input
+                id="reducedMotion"
+                type="checkbox"
+                checked={localReducedMotion}
+                onChange={(e) => setLocalReducedMotion(e.target.checked)}
+                className="w-5 h-5 rounded border-2 border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                aria-describedby="reducedMotion-description"
+              />
+            </div>
+            <p id="reducedMotion-description" className="text-xs text-gray-500">
+              Disable glitch animations and visual effects
+            </p>
+          </div>
+
           {error && (
-            <p className="mb-4 text-sm text-red-600">{error}</p>
+            <p className="mb-4 text-sm text-red-600" role="alert">{error}</p>
           )}
           {successMessage && (
-            <p className="mb-4 text-sm text-green-600">{successMessage}</p>
+            <p className="mb-4 text-sm text-green-600" role="status">{successMessage}</p>
           )}
           
           <div className="flex gap-3">

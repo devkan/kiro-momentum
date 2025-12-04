@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { usePolling, UsePollingResult } from './usePolling';
+import { usePolling } from './usePolling';
 import { AwsDataService } from '../services/AwsDataService';
 import { AWS_REFRESH_INTERVALS } from '../config/awsConfig';
 import {

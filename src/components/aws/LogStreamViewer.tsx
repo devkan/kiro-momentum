@@ -10,7 +10,7 @@ interface LogStreamViewerProps {
 }
 
 export const LogStreamViewer = memo(function LogStreamViewer({ summary, loading }: LogStreamViewerProps) {
-  const { theme } = useTheme();
+  const { theme, healthStatus } = useTheme();
 
   const cardBgClass =
     theme.mode === 'nightmare'
@@ -27,6 +27,9 @@ export const LogStreamViewer = memo(function LogStreamViewer({ summary, loading 
       : 'text-white';
 
   const glitchClass = theme.textGlitch ? 'animate-glitch' : '';
+  
+  // Add red flicker effect when health is low
+  const logFlickerClass = healthStatus < 30 ? 'log-flicker-red' : '';
 
   const getLogIcon = (message: string) => {
     if (message.includes('[ERROR]')) {
@@ -65,12 +68,12 @@ export const LogStreamViewer = memo(function LogStreamViewer({ summary, loading 
 
   return (
     <div
-      className={`p-4 rounded-xl backdrop-blur-md border-2 ${cardBgClass} ${textColorClass} shadow-lg transition-all duration-500 ${glitchClass}`}
+      className={`p-4 rounded-xl backdrop-blur-md border-2 ${cardBgClass} ${textColorClass} shadow-lg transition-all duration-500 ${glitchClass} font-mono`}
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <FileText size={20} />
-          <h3 className="text-lg font-semibold">Recent Logs</h3>
+          <h3 className="text-lg font-semibold tracking-wider">RECENT LOGS</h3>
         </div>
         {!showLoading && (
           <div className="flex items-center gap-3 text-xs transition-opacity duration-300">
@@ -110,7 +113,7 @@ export const LogStreamViewer = memo(function LogStreamViewer({ summary, loading 
                   <div className="flex items-center gap-2 text-xs opacity-60 mb-0.5">
                     <span>{formatTimestamp(log.timestamp)}</span>
                   </div>
-                  <div className={`text-[14pt] font-mono ${getLogColor(log.message)}`}>
+                  <div className={`text-[14pt] font-mono ${getLogColor(log.message)} ${logFlickerClass}`}>
                     {truncateMessage(log.message)}
                   </div>
                 </div>

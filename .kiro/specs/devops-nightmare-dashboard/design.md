@@ -464,6 +464,177 @@ npm run build
 - No build-time secrets required
 - API keys provided by users at runtime
 
+## Pomodoro Timer Feature
+
+### Overview
+
+The Pomodoro Timer integrates directly into the main Clock component, transforming it from a passive time display into an active productivity tool. The timer adapts to the horror theme, becoming increasingly urgent in Nightmare Mode.
+
+### UI/UX Flow
+
+**Trigger:**
+- Small tomato/timer icon button in the bottom right toolbar (next to settings)
+- Icon changes color based on timer state (idle/active/break)
+
+**Configuration Modal:**
+```typescript
+interface PomodoroConfig {
+  workDuration: number;    // minutes, default: 25
+  breakDuration: number;   // minutes, default: 5
+  autoRepeat: boolean;     // default: false
+}
+```
+
+Modal includes:
+- Work Duration input (1-60 minutes)
+- Break Duration input (1-30 minutes)
+- Auto-repeat checkbox
+- Start/Cancel buttons
+
+**Active State:**
+- Central Clock switches from "Current Time" to "Countdown Timer"
+- SVG Circular Progress Ring drawn around clock digits
+- Label below clock changes based on mode and phase
+- Timer persists across page refreshes using LocalStorage
+
+### Component Architecture
+
+```
+Clock Component (Enhanced)
+├── TimeDisplay (current time OR countdown)
+├── CircularProgressRing (SVG, conditional)
+├── TimerLabel (conditional)
+└── usePomodoro hook
+    ├── Timer state management
+    ├── Phase transitions (work/break)
+    ├── LocalStorage persistence
+    └── Audio notifications
+```
+
+### Horror Theme Integration
+
+**Peaceful Mode (Health 80-100):**
+- Progress Ring: Green/Blue gradient
+- Label: "Focus Time" or "Break Time"
+- Smooth, calming animations
+- Gentle notification sound
+
+**Glitch Mode (Health 40-79):**
+- Progress Ring: Yellow with occasional flicker
+- Label: "FOCUS SESSION" with glitch effect
+- Slightly jittery animations
+- Distorted notification sound
+
+**Nightmare Mode (Health 0-39):**
+- Progress Ring: RED with dripping/bleeding effect
+- Label: "EMERGENCY PATCHING..." or "SYSTEM COOLDOWN..."
+- Pulsing, urgent animations
+- Ticking clock sound that speeds up in last 60 seconds
+- Alarm sound becomes siren-like
+
+### Data Models
+
+```typescript
+interface PomodoroState {
+  isActive: boolean;
+  phase: 'work' | 'break' | 'idle';
+  remainingSeconds: number;
+  endTime: number | null;  // Unix timestamp for persistence
+  config: PomodoroConfig;
+}
+
+interface PomodoroConfig {
+  workDuration: number;
+  breakDuration: number;
+  autoRepeat: boolean;
+}
+```
+
+### usePomodoro Hook Interface
+
+```typescript
+interface UsePomodoroReturn {
+  state: PomodoroState;
+  start: (config: PomodoroConfig) => void;
+  pause: () => void;
+  resume: () => void;
+  reset: () => void;
+  skip: () => void;  // Skip to next phase
+}
+```
+
+### Persistence Strategy
+
+**LocalStorage Keys:**
+- `pomodoro_config`: Saved configuration
+- `pomodoro_end_time`: Unix timestamp when timer should end
+- `pomodoro_phase`: Current phase (work/break)
+
+**Recovery Logic:**
+```typescript
+// On mount, check if timer was active
+const endTime = localStorage.getItem('pomodoro_end_time');
+if (endTime && Date.now() < parseInt(endTime)) {
+  // Resume timer with remaining time
+  const remaining = parseInt(endTime) - Date.now();
+  resumeTimer(remaining);
+} else if (endTime) {
+  // Timer expired while page was closed
+  handleTimerComplete();
+}
+```
+
+### Circular Progress Ring
+
+**SVG Implementation:**
+```typescript
+interface CircularProgressProps {
+  progress: number;      // 0-1
+  size: number;          // diameter in pixels
+  strokeWidth: number;
+  mode: ThemeMode;
+}
+```
+
+**Visual Effects by Mode:**
+- Peaceful: Smooth gradient stroke, clean animation
+- Glitch: Flickering stroke, occasional offset
+- Nightmare: Red stroke with drip effect (SVG filter), pulsing
+
+### Audio Integration
+
+**Sound Effects:**
+- `tick.mp3`: Subtle ticking (Nightmare Mode only)
+- `tick_fast.mp3`: Rapid ticking (last 60 seconds, Nightmare Mode)
+- `alarm_peaceful.mp3`: Gentle chime (Peaceful Mode)
+- `alarm_nightmare.mp3`: Urgent siren (Nightmare Mode)
+
+**Playback Logic:**
+- Ticking starts when timer begins (Nightmare Mode only)
+- Ticking speeds up at 60 seconds remaining
+- Alarm plays when phase completes
+- All sounds respect global mute setting
+
+### Correctness Properties
+
+### Property 11: Timer countdown accuracy
+
+*For any* valid work duration, starting the timer and waiting for the specified duration should result in the timer reaching zero within a 1-second margin of error.
+
+**Validates: Pomodoro Timer accuracy**
+
+### Property 12: Timer persistence round trip
+
+*For any* active timer state, refreshing the browser should restore the timer with the correct remaining time (within 1 second).
+
+**Validates: Timer persistence across page reloads**
+
+### Property 13: Phase transition consistency
+
+*For any* timer configuration with auto-repeat enabled, completing a work phase should transition to a break phase. For configurations with auto-repeat disabled, completing a work phase should transition directly to idle.
+
+**Validates: Phase transition logic (work phase completion)**
+
 ## Future Enhancements
 
 - Real AWS Health Dashboard integration
@@ -472,3 +643,5 @@ npm run build
 - Export/import settings and todos
 - Progressive Web App (PWA) support
 - Multi-language support
+- Pomodoro statistics and history tracking
+- Custom timer presets (52/17, 90/20, etc.)

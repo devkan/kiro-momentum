@@ -4,11 +4,20 @@ This directory should contain horror sound effects for the Nightmare Mode.
 
 ## Required Files
 
+### Nightmare Mode Audio
 The AudioManager component will attempt to load audio files in the following order:
 
 1. `siren.mp3` - Emergency siren sound effect
 2. `heartbeat.mp3` - Heartbeat sound effect
 3. `horror.mp3` - Generic horror ambient sound
+
+### Pomodoro Timer Audio
+The Pomodoro Timer feature requires the following audio files:
+
+1. `tick.mp3` - Subtle ticking sound (plays during Nightmare Mode timer)
+2. `tick_fast.mp3` - Rapid ticking sound (plays in last 60 seconds, Nightmare Mode)
+3. `alarm_peaceful.mp3` - Gentle chime for timer completion (Peaceful/Glitch modes)
+4. `alarm_nightmare.mp3` - Urgent siren for timer completion (Nightmare Mode)
 
 ## File Requirements
 
