@@ -4,17 +4,23 @@ A browser-based productivity dashboard that transforms from a peaceful, Momentum
 
 ## 📸 Screenshots
 
-### Peaceful Mode
-![Peaceful Mode](public/snapshot/001.png)
+### Peaceful Mode (Hacker News RSS)
+![Peaceful Mode (Hacker News RSS)](public/snapshot/001.png)
 
-### Hacker News Integration
-![Hacker News](public/snapshot/002.png)
+### Peaceful Mode (AWS Monitoring)
+![Peaceful Mode (AWS Monitoring)](public/snapshot/002.png)
 
-### AWS Monitoring
-![AWS Monitoring](public/snapshot/003.png)
+### Settings
+![Settings](public/snapshot/003.png)
+
+### Pomodoro Settings
+![Pomodoro Settings](public/snapshot/004.png)
+
+### Pomodoro Running
+![Pomodoro Running](public/snapshot/005.png)
 
 ### Nightmare Mode
-![Nightmare Mode](public/snapshot/004.png)
+![Nightmare Mode](public/snapshot/006.png)
 
 ## Tech Stack
 
