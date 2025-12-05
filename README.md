@@ -2,6 +2,8 @@
 
 A browser-based productivity dashboard that transforms from a peaceful, Momentum-style interface into a horror-themed nightmare based on simulated server health status.
 
+All information is stored in local storage and is not saved separately in a database. AWS integration is currently configured with dummy data, and some code modifications may be required when connecting with actual API keys.
+
 ## 📸 Screenshots
 
 ### Peaceful Mode (Hacker News RSS)
