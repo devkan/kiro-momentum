@@ -2,6 +2,20 @@
 
 A browser-based productivity dashboard that transforms from a peaceful, Momentum-style interface into a horror-themed nightmare based on simulated server health status.
 
+## 📸 Screenshots
+
+### Peaceful Mode
+![Peaceful Mode](public/snapshot/001.png)
+
+### Hacker News Integration
+![Hacker News](public/snapshot/002.png)
+
+### AWS Monitoring
+![AWS Monitoring](public/snapshot/003.png)
+
+### Nightmare Mode
+![Nightmare Mode](public/snapshot/004.png)
+
 ## Tech Stack
 
 - **Framework**: React 18 with TypeScript
