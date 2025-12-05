@@ -11,6 +11,7 @@ import { BackgroundManager } from './BackgroundManager';
 import { HorrorOverlay } from './HorrorOverlay';
 import { DevModeToggle } from './DevModeToggle';
 import { AudioManager } from './AudioManager';
+import { PomodoroAudioManager } from './PomodoroAudioManager';
 import { AwsMonitoringPanel } from './aws/AwsMonitoringPanel';
 import { HackerNewsPanel } from './hackernews/HackerNewsPanel';
 import { StorageService } from '../services/StorageService';
@@ -111,6 +112,9 @@ export function Dashboard() {
       
       {/* Audio Manager - conditional rendering based on mode */}
       <AudioManager />
+      
+      {/* Pomodoro Audio Manager - handles timer sounds */}
+      <PomodoroAudioManager pomodoroState={pomodoro.state} />
       
       {/* Main Dashboard Layout */}
       <div className={dashboardClasses}>

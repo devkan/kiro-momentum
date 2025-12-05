@@ -19,9 +19,9 @@ export function AudioManager() {
     // Try to load siren sound first, fallback to heartbeat
     const tryLoadAudio = async () => {
       const audioFiles = [
-        '/audio/siren.mp3',
-        '/audio/heartbeat.mp3',
-        '/audio/horror.mp3'
+        '/audio/audio_siren.mp3',
+        '/audio/audio_heartbeat.mp3',
+        '/audio/audio_horror.mp3'
       ];
 
       for (const file of audioFiles) {
@@ -63,6 +63,33 @@ export function AudioManager() {
     };
   }, [theme.mode]);
 
+  // Fade audio in or out smoothly
+  const fadeAudio = (audio: HTMLAudioElement, fadeIn: boolean, duration: number = 1000) => {
+    const steps = 20;
+    const stepDuration = duration / steps;
+    const targetVolume = fadeIn ? 0.3 : 0;
+    const startVolume = fadeIn ? 0 : audio.volume;
+    const volumeStep = (targetVolume - startVolume) / steps;
+    
+    let currentStep = 0;
+    
+    const fadeInterval = setInterval(() => {
+      currentStep++;
+      const newVolume = startVolume + (volumeStep * currentStep);
+      audio.volume = Math.max(0, Math.min(0.3, newVolume));
+      
+      if (currentStep >= steps) {
+        clearInterval(fadeInterval);
+        if (!fadeIn) {
+          audio.pause();
+          audio.currentTime = 0;
+        }
+      }
+    }, stepDuration);
+    
+    return fadeInterval;
+  };
+
   // Handle audio playback based on theme mode
   useEffect(() => {
     const audio = audioRef.current;
@@ -71,13 +98,15 @@ export function AudioManager() {
     const shouldPlay = theme.mode === 'nightmare' && theme.soundEnabled && soundEnabled && !isMuted;
 
     if (shouldPlay) {
-      // Try to play audio
+      // Fade in and play
+      audio.volume = 0;
       const playPromise = audio.play();
       
       if (playPromise !== undefined) {
         playPromise
           .then(() => {
-            // Audio started playing successfully
+            // Audio started playing successfully - fade in
+            fadeAudio(audio, true, 1500);
             setAutoplayBlocked(false);
           })
           .catch((error) => {
@@ -89,7 +118,10 @@ export function AudioManager() {
           });
       }
     } else {
-      audio.pause();
+      // Fade out before stopping
+      if (!audio.paused) {
+        fadeAudio(audio, false, 1000);
+      }
       setAutoplayBlocked(false);
     }
   }, [theme.mode, theme.soundEnabled, soundEnabled, isMuted, audioAvailable]);
@@ -99,8 +131,10 @@ export function AudioManager() {
     const audio = audioRef.current;
     if (!audio) return;
 
+    audio.volume = 0;
     audio.play()
       .then(() => {
+        fadeAudio(audio, true, 1500);
         setAutoplayBlocked(false);
       })
       .catch((error) => {
